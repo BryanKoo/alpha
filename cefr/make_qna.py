@@ -11,7 +11,8 @@ import os, sys
 import pdb
 import random
 from parse_cefr import is_sentence
-from english-inflection.get_conjugation import get_conjugation
+sys.path.append("english-inflection/")
+from get_conjugation import get_conjugation
 from get_plural import get_plural
 from get_comparative import get_comparative
 
