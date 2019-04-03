@@ -3,8 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render
 import sys
-sys.path.append("../cefr")
-from make_qna import make_qna_type2or4
+from alpha.cefr.make_qna import make_qna_type2or4
 
 cefr_levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 # Create your views here.
