@@ -574,7 +574,8 @@ def make_qna_type4(conn, level, sub_level, count):
   return qnas
 
 def make_qna(qtype, level, sub_level, count):
-  dbfile = "/home/koo/english/cefr/cefr.db"
+  path = os.path.split(__file__)[0]
+  dbfile = os.path.join(path, "cefr.db")
   conn = create_connection(dbfile)
 
   if qtype == 1:
