@@ -602,7 +602,8 @@ def make_qna_type2or4(level, sub_level, excepts=None):
   else:
     except_list = []
 
-  dbfile = "/home/koo/english/cefr/cefr.db"
+  path = os.path.split(__file__)[0]
+  dbfile = os.path.join(path, "cefr.db")
   conn = create_connection(dbfile)
 
   freq_max, freq_min = get_frequencies(level, sub_level)
