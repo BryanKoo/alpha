@@ -2,7 +2,7 @@
 {% if stop_test == True %}
   <h1>끝났습니다.</h1>
   <h2>총 {{total}}문제 중 {{n_correct}}개 맞았습니다.</h2>
-  <h2>당신의 레벨은 {{level_text}}</h2><br/>
+  <h2>당신의 레벨은 {{level_text}}<br/><br/>
   <a href='{% url 'quiz:index' %}'>Restart</a>
   </h2>
 {% elif choice == a_index %}
