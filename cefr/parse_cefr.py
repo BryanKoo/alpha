@@ -15,7 +15,8 @@ import re
 import os, sys
 import pdb
 import pickle
-from check_ukus import check_ukus
+if __name__ == "__main__":
+  from check_ukus import check_ukus
 reload(sys)
 sys.setdefaultencoding('utf-8')
 

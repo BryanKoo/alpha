@@ -9,12 +9,16 @@ import sqlite3
 import re
 import os, sys
 import pdb
-import random
 from parse_cefr import is_sentence
-sys.path.append("../english-inflection")
-from get_conjugation import get_conjugation
-from get_plural import get_plural
-from get_comparative import get_comparative
+if __name__ == "__main__":
+  sys.path.append("../english-inflection")
+  from get_conjugation import get_conjugation
+  from get_plural import get_plural
+  from get_comparative import get_comparative
+else:
+  from english_inflection.get_conjugation import get_conjugation
+  from english_inflection.get_plural import get_plural
+  from english_inflection.get_comparative import get_comparative
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -50,8 +54,9 @@ contractions3 = {
     }
 
 def make_log(string):
-  with open("/home/koo/english/cefr/make_qna.log", "a") as lf:
-    lf.write(string + '\n')
+  pass
+  #with open("/home/koo/english/cefr/make_qna.log", "a") as lf:
+  #  lf.write(string + '\n')
 
 # replace only when headword is in the text
 def replace_contractions(word, text):
@@ -622,7 +627,8 @@ def make_qna_type2or4(level, sub_level, excepts=None):
     word = synopsis
     qtype = 4
 
-  qtype = 4
+  if random.randrange(1,3) == 1:
+    qtype = 4
   if qtype == 4:
     found, tag, example_org = find_example(word, pos, examples)
     if example_org == "": pdb.set_trace()
