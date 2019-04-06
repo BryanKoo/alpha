@@ -96,8 +96,8 @@ def results(request, level, choice):
   else:
     request.session['excepts'] += '&' + cefr_level + '|' + word
 
-  if 'seg' not in request.session: request.session['seg'] = 0
-  if 'trial' not in request.session: request.session['trial'] = 1
+  if 'seg' not in request.session or request.session['seg'] == "": request.session['seg'] = 0
+  if 'trial' not in request.session or request.session['trial'] == "": request.session['trial'] = 1
 
   text_time = datetime.datetime.now()
   insert_qna_result([request.session['user_id'], request.session['seg'], request.session['trial'], text_time, int(level), request.session['sub_level'], word, request.session['question'], request.session['answers'], result+choice])
