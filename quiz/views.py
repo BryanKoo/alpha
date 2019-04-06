@@ -105,5 +105,5 @@ def results(request, level, choice):
   n_correct = request.session['scores'].count('T')
   levels = ['Beginner', 'Elementary', 'Intermediate', 'Upper Intermediate', 'Advanced', 'Proficient']
   level_text = levels[int(level)-1] + ' ' + str(request.session['sub_level']*10) + '%'
-  context = {'level':level, 'choice':int(choice), 'a_index':a_index+1, 'total':total, 'n_correct': n_correct, 'sub_level':request.session['sub_level'], 'scores':request.session['scores'], 'excepts':request.session['excepts'], 'stop_test':stop_test, 'level_text':level_text, 'user_id':request.session['user_id']}
+  context = {'seg':request.session['seg'], 'trial':request.session['trial'], 'level':level, 'choice':int(choice), 'a_index':a_index+1, 'total':total, 'n_correct': n_correct, 'sub_level':request.session['sub_level'], 'scores':request.session['scores'], 'excepts':request.session['excepts'], 'stop_test':stop_test, 'level_text':level_text, 'user_id':request.session['user_id']}
   return render(request, 'quiz/results.html', context)
