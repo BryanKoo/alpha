@@ -119,6 +119,8 @@ def is_sentence(text):
     return True
   elif text.endswith(".'") or text.endswith("?'") or text.endswith("!'"):
     return True
+  elif text.lower().endswith("sincerely,"):
+    return True
   elif text.endswith("'") or text.endswith('"'):
     return False
   else:
@@ -163,6 +165,7 @@ def select_2examples(word, examples_org):
   too_long = False
   candidates = []
   examples = []
+
   for example in examples_org:
     if is_sentence(example):
       example = cleanse_example(word, example)
@@ -174,6 +177,7 @@ def select_2examples(word, examples_org):
         candidates.append(example)
       else:
         examples.append(example)
+
   if len(examples) == 0:
     if too_long:
       shortest = ""
@@ -183,8 +187,8 @@ def select_2examples(word, examples_org):
           shortest = example
       examples.append(shortest)
     elif too_short:
-      #print "example too short", word, examples_org
-      #pdb.set_trace()
+      print "example too short", word, examples_org
+      pdb.set_trace()
       longest = ""
       for example in candidates:
         if longest == "" or len(example.split(' ')) > len(longest.split(' ')):

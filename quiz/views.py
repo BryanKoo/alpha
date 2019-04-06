@@ -13,9 +13,9 @@ def index(request):
   context = None
   seg = request.GET.get('seg', '0')
   if 'seg' not in request.session:
-    request.session['seg'] = seg
+    request.session['seg'] = int(seg)
   elif request.session['seg'] == '0':
-    request.session['seg'] = seg
+    request.session['seg'] = int(seg)
   if request.GET.get('reset', '0') == '1':
     request.session['level'] = 0
   if 'user_id' not in request.session:
@@ -95,6 +95,9 @@ def results(request, level, choice):
     request.session['excepts'] = cefr_level + '|' + word
   else:
     request.session['excepts'] += '&' + cefr_level + '|' + word
+
+  if 'seg' not in request.session: request.session['seg'] = 0
+  if 'trial' not in request.session: request.session['trial'] = 1
 
   text_time = datetime.datetime.now()
   insert_qna_result([request.session['user_id'], request.session['seg'], request.session['trial'], text_time, int(level), request.session['sub_level'], word, request.session['question'], request.session['answers'], result+choice])
