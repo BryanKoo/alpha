@@ -15,5 +15,5 @@ urlpatterns = [
     # ex: /quiz/5/
     url(r'^(?P<level>[0-9]+)/$', views.detail, name='detail'),
     # ex: /quiz/5/results/1/
-    url(r'^(?P<level>[0-9]+)/results/(?P<choice>[1-4])/$', views.results, name='results'),
+    url(r'^(?P<level>[0-9]+)/results/(?P<choice>[1-5])/$', views.results, name='results'),
 ]

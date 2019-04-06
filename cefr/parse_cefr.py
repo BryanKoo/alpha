@@ -129,11 +129,11 @@ def cleanse_meaning(meaning):
   meaning = meaning.replace("  ", " ").strip()
   return meaning
 
-def write_sentence(meaning, examples):
+def write_sentence(word, meaning, examples):
   with open("cefr_sentences.txt", "a") as fp:
-    fp.write(meaning + '\n')
+    fp.write(word + '\t' + meaning + '\n')
     for example in examples:
-      fp.write(example + '\n')
+      fp.write(word + '\t' + example + '\n')
 
 # cleanse parenthesis without nesting
 # remove parenthesis and keep in-between when 1 word or has headword or short
@@ -166,7 +166,7 @@ def select_2examples(word, examples_org):
   for example in examples_org:
     if is_sentence(example):
       example = cleanse_example(word, example)
-      if len(example.split(' ')) < 7:
+      if len(example.split(' ')) < 5:
         too_short = True
         candidates.append(example)
       elif len(example.split(' ')) > 16:
@@ -183,6 +183,8 @@ def select_2examples(word, examples_org):
           shortest = example
       examples.append(shortest)
     elif too_short:
+      #print "example too short", word, examples_org
+      #pdb.set_trace()
       longest = ""
       for example in candidates:
         if longest == "" or len(example.split(' ')) > len(longest.split(' ')):
@@ -230,6 +232,7 @@ def create_tables_from_file(conn, sfile):
 
 # [freq, level, word, pos, meaning, synopsis, examples[0], examples[1]]
 def insert_word(conn, columns):
+  columns[4] = cleanse_meaning(columns[4])
   if columns[3].startswith("PHRASE"):
     cefr_word_pos_meaning.append(columns[5] + "=" + columns[2] + '|' + columns[3][8:] + '; ' + columns[3][:6] + '|' + columns[4]) # word|pos|meaning
     if columns[5] not in cefr_words: cefr_words[columns[5]] = 1
@@ -237,8 +240,6 @@ def insert_word(conn, columns):
     cefr_word_pos_meaning.append(columns[2] + '|' + columns[3] + '|' + columns[4]) # word|pos|meaning
     if columns[2] not in cefr_words: cefr_words[columns[2]] = 1
   if conn == None: return None
-  if has_upperword(columns[4]):
-    columns[4] = cleanse_meaning(columns[4])
   sql = "insert into words_bymeaning (frequency, level, word, pos, meaning, synopsis, example1, example2) values (?,?,?,?,?,?,?,?)"
   try:
     cur = conn.cursor()
@@ -255,10 +256,10 @@ def insert_also(conn, columns):
 # [word_id, us_word]
 def insert_ukus(conn, columns, pos, meaning, synopsis):
   if pos.startswith("PHRASE"):
-    cefr_word_pos_meaning.append(synopsis + '=' + columns[1] + '|' + pos[8:] + ';' + pos[:6] + '|' + meaning)  # word|pos|meaning
+    cefr_word_pos_meaning.append(synopsis + '=' + columns[1] + '|' + pos[8:] + ';' + pos[:6] + '|' + cleanse_meaning(meaning))  # word|pos|meaning
     if synopsis not in cefr_words: cefr_words[synopsis] = 1
   else:
-    cefr_word_pos_meaning.append(columns[1] + '|' + pos + '|' + meaning)  # word|pos|meaning
+    cefr_word_pos_meaning.append(columns[1] + '|' + pos + '|' + cleanse_meaning(meaning))  # word|pos|meaning
     if columns[1] not in cefr_words: cefr_words[columns[1]] = 1
   if conn == None: return None
   sql = "insert into us_bymeaning (word_id, us_word) values (?,?)"
@@ -908,7 +909,7 @@ def parse_vocabulary(conn, vocfile):
         state = "lexample"
       elif is_pos(line):
         examples = select_2examples(word, dexample)
-        write_sentence(meaning, dexample)
+        write_sentence(word, meaning, dexample)
         if len(examples) < 2: examples.append("")
         word_org = word
         ukus = check_ukus(word, pos, synopsis, meaning)
@@ -925,7 +926,7 @@ def parse_vocabulary(conn, vocfile):
         write_inflection(word, pos, inflection, inflection_pos, grammar_pos)
       elif is_meaning(line):
         examples = select_2examples(word, dexample)
-        write_sentence(meaning, dexample)
+        write_sentence(word, meaning, dexample)
         if len(examples) < 2: examples.append("")
         ukus = check_ukus(word, pos, synopsis, meaning)
         word_org = word
@@ -947,7 +948,7 @@ def parse_vocabulary(conn, vocfile):
         dexample = []
       elif is_meaning(next_line):
         examples = select_2examples(word, dexample)
-        write_sentence(meaning, dexample)
+        write_sentence(word, meaning, dexample)
         if len(examples) < 2: examples.append("")
         ukus = check_ukus(word, pos, synopsis, meaning)
         word_org = word
@@ -965,7 +966,7 @@ def parse_vocabulary(conn, vocfile):
         synopsis, also_syn = parse_synopsis(line)
       elif is_headline(line, next_line):
         examples = select_2examples(word, dexample)
-        write_sentence(meaning, dexample)
+        write_sentence(word, meaning, dexample)
         if len(examples) < 2: examples.append("")
         ukus = check_ukus(word, pos, synopsis, meaning)
         word, pos, synopsis = identify_phrase(word, pos, synopsis)
@@ -999,7 +1000,7 @@ def parse_vocabulary(conn, vocfile):
         if lexample != "":
           dexample.append(lexample)
         examples = select_2examples(word, dexample)
-        write_sentence(meaning, dexample)
+        write_sentence(word, meaning, dexample)
         if len(examples) < 2: examples.append("")
         ukus = check_ukus(word, pos, synopsis, meaning)
         word, pos, synopsis = identify_phrase(word, pos, synopsis)
@@ -1017,7 +1018,7 @@ def parse_vocabulary(conn, vocfile):
         if lexample != "":
           dexample.append(lexample)
         examples = select_2examples(word, dexample)
-        write_sentence(meaning, dexample)
+        write_sentence(word, meaning, dexample)
         if len(examples) < 2: examples.append("")
         ukus = check_ukus(word, pos, synopsis, meaning)
         word_org = word
@@ -1036,7 +1037,7 @@ def parse_vocabulary(conn, vocfile):
         if lexample != "":
           dexample.append(lexample)
         examples = select_2examples(word, dexample)
-        write_sentence(meaning, dexample)
+        write_sentence(word, meaning, dexample)
         if len(examples) < 2: examples.append("")
         ukus = check_ukus(word, pos, synopsis, meaning)
         word_org = word
@@ -1060,7 +1061,7 @@ def parse_vocabulary(conn, vocfile):
         if lexample != "":
           dexample.append(lexample)
         examples = select_2examples(word, dexample)
-        write_sentence(meaning, dexample)
+        write_sentence(word, meaning, dexample)
         if len(examples) < 2: examples.append("")
         ukus = check_ukus(word, pos, synopsis, meaning)
         word_org = word
@@ -1085,7 +1086,7 @@ def parse_vocabulary(conn, vocfile):
   if lexample != "":
     dexample.append(lexample)
   examples = select_2examples(word, dexample)
-  write_sentence(meaning, dexample)
+  write_sentence(word, meaning, dexample)
   if len(examples) < 2: examples.append("")
   ukus = check_ukus(word, pos, synopsis, meaning)
   word, pos, synopsis = identify_phrase(word, pos, synopsis)

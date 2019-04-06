@@ -34,7 +34,7 @@ contractions2_words = [
     "will", "would",
     "shall", "should",
     "have", "had", 
-    "be",
+    "be", "do",
     "not",
   ]
 contractions2 = {
@@ -70,28 +70,66 @@ def replace_contractions(word, text):
     text = text.replace(contractions3[word][0], contractions3[word][1])
   return text
 
+def has_punctuation(text):
+  for ch in text:
+    if ch in ['"', ',', '?', '!', '.', '-']:  # keep ' for o'clock (-? for make-up, .? for a.m.)
+      return True
+  return False
+
 def remove_punctuation(word):
   removed = ""
   for ch in word:
-    if ch not in ['"', ',', '?', '!', '.', '-']:  # keep ' for o'clock (- for make-up, . for a.m.)
+    if ch not in ['"', ',', '?', '!', '.', '-']:  # keep ' for o'clock (-? for make-up, .? for a.m.)
       removed += ch
     elif removed != "":
       break
   return removed
 
+def remove_punctuation_sent(sent):
+  removed = ""
+  for ch in sent:
+    if ch not in ['"', ',', '?', '!', '.', '-']:  # keep ' for o'clock (-? for make-up, .? for a.m.)
+      removed += ch
+  return removed
+
 # when a word is explained by itself
+# word family detection is added (convenient, convenience)
 def bad_meaning(word, pos, meaning):
+  if len(word) < 2: return False
   if word in ['be']: return False # meaning for be should be checked manually
-  inflections, inf_tags = get_inflections(word.lower(), pos)
-  if meaning.lower().count(word.lower()) > 0 and (meaning.startswith("If") or meaning.startswith("if")):
-    print "meaning is not useful:", word, ">", meaning
+  word = word.lower()
+  meaning = meaning.lower()
+  inflections, inf_tags = get_inflections(word)
+  if meaning.count(word) > 0 and (meaning.startswith("if") or meaning.startswith('when') or word.count(' ') > 0):
+    print "meaning is not useful1:", word, ">", meaning
     return True
-  else:
-    tokens = meaning.split(" ")
-    for token in tokens:
-      if token.lower() in inflections:
-        print "meaning may not be useful:", word, ">", meaning
-        return True
+  if not has_punctuation(word):
+    meaning = remove_punctuation_sent(meaning)
+  tokens = meaning.split(" ")
+  for token in tokens:
+    if token in inflections:
+      print "meaning may not be useful2:", word, ">", meaning
+      return True
+  for token in tokens:
+    if token.startswith(word) and len(word) > 2:
+      print "meaning may not be useful3:", word, ">", meaning
+      return True
+    elif token.startswith(word[:-1]) and len(word) > 4:
+      print "meaning may not be useful4:", word, ">", meaning
+      return True
+    elif token.startswith(word[:-2]) and len(word) > 5:
+      print "meaning may not be useful4:", word, ">", meaning
+      return True
+    elif token.startswith(word[:-3]) and len(word) > 6:
+      print "meaning may not be useful4:", word, ">", meaning
+      return True
+    elif token.startswith(word[:-4]) and len(word) > 7:
+      print "meaning may not be useful4:", word, ">", meaning
+      return True
+    elif token.startswith(word[:-5]) and len(word) > 8:
+      print "meaning may not be useful4:", word, ">", meaning
+      return True
+
   return False
 
 def remove_front_paren(meaning):
@@ -595,6 +633,36 @@ def make_qna(qtype, level, sub_level, count):
   conn.close()
   return qnas
 
+def get_new_user_id():
+  path = os.path.split(__file__)[0]
+  dbfile = os.path.join(path, "cefr.db")
+  conn = create_connection(dbfile)
+  sql = "select user_id from test_qnas order by user_id desc limit 1;"
+  try:
+    cur = conn.cursor()
+    cur.execute(sql)
+    rows = cur.fetchall()
+  except sqlite3.Error as e:
+    print(e)
+  if not rows:
+    return 1
+  else:
+    return rows[0][0] + 1
+
+def insert_qna_result(columns):
+  path = os.path.split(__file__)[0]
+  dbfile = os.path.join(path, "cefr.db")
+  conn = create_connection(dbfile)
+  sql = "insert into test_qnas (user_id, seg, trial, time_text, level, sub_level, word, question, answers, result) values (?,?,?,?,?,?,?,?,?,?);"
+  try:
+    cur = conn.cursor()
+    cur.execute(sql, columns)
+    conn.commit()
+  except sqlite3.Error as e:
+    print(e)
+  return cur.lastrowid
+
+
 # make a question type 2 or 4
 def make_qna_type2or4(level, sub_level, excepts=None):
   if excepts != None:
@@ -620,16 +688,18 @@ def make_qna_type2or4(level, sub_level, excepts=None):
   meaning = arows[0][1]
   examples = [arows[0][2], arows[0][3]]
   synopsis = arows[0][4]
+
   qtype = 2
-  if bad_meaning(word, pos, meaning):
-    qtype = 4
   if arows[0][0].startswith("PHRASE"):
     print "word is phrase"
     word = synopsis
     qtype = 4
-
-  if random.randrange(1,3) == 1:
+  elif bad_meaning(word, pos, meaning):
     qtype = 4
+
+  if qtype == 2 and random.randrange(1,3) == 1:
+    qtype = 4
+
   if qtype == 4:
     found, tag, example_org = find_example(word, pos, examples)
     if example_org == "": pdb.set_trace()

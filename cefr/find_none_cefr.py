@@ -6,7 +6,7 @@ import re
 import os, sys
 import pdb
 import pickle
-sys.path.append("../inflection")
+sys.path.append("../english-inflection")
 from get_conjugation import get_conjugation
 from get_plural import get_plural
 from get_comparative import get_comparative
@@ -14,22 +14,43 @@ from get_comparative import get_comparative
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+def has_number(word):
+  for ch in word:
+    if ch >= '0' and ch <= '9':
+      return True
+  return False
+
 def add_inflections():
   count1 = len(cefr_word_pos_meaning)
   count2 = 0
   inflection_dic = {}
-  for word_pos in cefr_word_pos_meaning:
-    word = word_pos.split('|')[0]
+
+  for word_pos in cefr_word_pos_meaning:  # infinitive
+    word = word_pos.split('|')[0].encode('utf-8')
+    if word.count('=') > 0: word = word.split('=')[0]
     pos = word_pos.split('|')[1]
     if word not in inflection_dic:
       inflection_dic[word] = pos
 
+  for word_pos in cefr_word_pos_meaning:  # composite infinitive
+    word = word_pos.split('|')[0].encode('utf-8')
+    if word.count('=') > 0: word = word.split('=')[0]
+    pos = word_pos.split('|')[1]
+    if word.count(" ") > 0:
+      subwords = word.split(" ")
+      for subword in subwords:
+        if subword not in inflection_dic:
+          inflection_dic[subword] = pos
+          
+
   for word_pos in cefr_word_pos_meaning:
-    word = word_pos.split('|')[0]
+    word = word_pos.split('|')[0].encode('utf-8')
+    if word.count('=') > 0: word = word.split('=')[0]
     pos = word_pos.split('|')[1]
     if word.count(" ") > 0: continue
     inflectable = False
-    if pos.startswith("NOUN") or pos.startswith("NUMBER"):
+
+    if pos.startswith("NOUN") or pos.startswith("NUMBER") or word == 'other':
       inflectable = True
       plurals = get_plural(word)[1]
       for plural in plurals:
@@ -37,6 +58,7 @@ def add_inflections():
           inflection_dic[plural[3:]] = pos
           #print word + '\t' + pos + '\t' + plural
           count2 += 1
+
     if pos.startswith("AD") or pos.startswith("DETER"):
       inflectable = True
       comparatives = get_comparative(word)[1]
@@ -45,6 +67,7 @@ def add_inflections():
           inflection_dic[comparative[3:]] = pos
           #print word + '\t' + pos + '\t' + comparative
           count2 += 1
+
     if pos.startswith("VERB") or pos.startswith("AUXILIARY VERB") or pos.startswith("MODAL VERB"):
       inflectable = True
       conjus = get_conjugation(word)[1]
@@ -53,7 +76,8 @@ def add_inflections():
           inflection_dic[conju[3:]] = pos
           #print word + '\t' +  pos + '\t' + conju
           count2 += 1
-    if inflectable == False:
+
+    if inflectable == False:  # for debugging
       #print word + '\t' + pos
       pass
   #print count2, "words are added from cefr", count1, "words, total number is", len(inflection_dic)
@@ -73,8 +97,12 @@ def is_number(word):
   return False
 
 def remove_apos(word):
-  if word.endswith("n't"):
+  if word.endswith("can't"):
+    return word[:-2]
+  elif word.endswith("n't"):
     return word[:-3]
+  elif word.count("n't") > 0:
+    return word.replace("n't", "")
   elif word.endswith("'s") or word.endswith("’s"):
     return word[:-2]
   elif word.endswith("'m"):
@@ -122,12 +150,13 @@ def none_cefr_meaning(inflection_dic):
   not_founds = []
   for word_meaning in cefr_word_pos_meaning:
     word = word_meaning.split('|')[0]
+    if word.count('=') > 0: word = word.split('=')[0]
     meaning = word_meaning.split('|')[2]
     tokens = split_words(meaning)
     for token in tokens:
       if token not in inflection_dic and token.lower() not in inflection_dic and not is_number(token) and token not in not_founds:
         if token.count('-') == 0:
-          fp.write(token + '\n')
+          fp.write(token + '\t' + word + '\n')
           not_founds.append(token)
         else:
           subs = token.split("-")
@@ -137,7 +166,7 @@ def none_cefr_meaning(inflection_dic):
             if sub not in inflection_dic and sub.lower() not in inflection_dic and not is_number(sub) and sub not in not_founds:
               not_found = True
           if not_found:
-            fp.write(token + '\n')
+            fp.write(token + '\t' + word + '\n')
             not_founds.append(token)
   fp.close()
 
@@ -148,11 +177,13 @@ def none_cefr_sentence(inflection_dic):
   while True:
     line = f.readline()
     if not line: break
-    tokens = split_words(line)
+    word = line.split('\t')[0]
+    tokens = split_words(line.split('\t')[1])
     for token in tokens:
+      if has_number(token): continue
       if token not in inflection_dic and token.lower() not in inflection_dic and not is_number(token) and token not in not_founds:
-        if token.count('-') == 0:
-          fp.write(token + '\n')
+        if token.count('-') == 0 and token.islower():
+          fp.write(token + '\t' + word + '\n')
           not_founds.append(token)
         else:
           subs = token.split("-")
@@ -161,11 +192,12 @@ def none_cefr_sentence(inflection_dic):
             if len(sub) < 2: continue
             if sub not in inflection_dic and sub.lower() not in inflection_dic and not is_number(sub) and sub not in not_founds:
               not_found = True
-          if not_found:
-            fp.write(token + '\n')
+          if not_found and token.islower():
+            fp.write(token + '\t' + word + '\n')
             not_founds.append(token)
   fp.close()
 
+# find words with bad meaning for make_qna
 def word_in_meaning(inflection_dic):
   fp = open("word_in_meaning.csv", "w")
   for word_meaning in cefr_word_pos_meaning:
@@ -203,4 +235,4 @@ if __name__ == "__main__":
   inflection_dic = add_inflections()
   none_cefr_meaning(inflection_dic)
   none_cefr_sentence(inflection_dic)
-  word_in_meaning(inflection_dic)
+  #word_in_meaning(inflection_dic)

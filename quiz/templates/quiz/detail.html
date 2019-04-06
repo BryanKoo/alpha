@@ -1,3 +1,9 @@
+<html>
+<style type="text/css">
+ a:link { color: blue; text-decoration: none;}
+ a:visited { color: blue; text-decoration: none;}
+ a:hover { color: blue; text-decoration: underline;}
+</style>
 <font size=7>
 {% if qtype == 2 %}
      <h3>주어진 단어/문구의 뜻을 가진 단어를 선택하세요.</h3>
@@ -9,6 +15,8 @@
 <a href='{% url 'quiz:results' level 1 %}'>A. {{answer1}}</a><br/><br/>
 <a href='{% url 'quiz:results' level 2 %}'>B. {{answer2}}</a><br/><br/>
 <a href='{% url 'quiz:results' level 3 %}'>C. {{answer3}}</a><br/><br/>
-<a href='{% url 'quiz:results' level 4 %}'>D. I am not sure.</a><br/><br/>
+<a href='{% url 'quiz:results' level 4 %}'>D. 모르겠어요</a><br/><br/>
+<a href='{% url 'quiz:results' level 5 %}'>E. 문제나 답안이 이상해요</a><br/><br/>
 </h3>
 </font>
+</html>

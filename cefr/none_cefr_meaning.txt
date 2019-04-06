@@ -1,191 +1,142 @@
-etc
-intentionally
-accord
-accustomed
-chemically
-Internet
-afford
-unable
-based
-sloping
-negatives
-curved
-fingertips
-stake
-sexually
-theatrical
-participle
-pod
-sting
-behalf
-ringing
-two-wheeled
-motorcycle
-unpleasantly
-Africa
-chalk
-currents
-ca
-yeast
-rounded
-brought
-English
-Spanish
-Australia
-patterned
-uncontrolled
-wax
-others
-A&E
-ABBREVIATION
-compact
-worth
-French
-British
-axe
-Christian
-according
-European
-Mozart
-Stravinsky
-situated
-hairy
-cement
-Asia
-Europe
-America
-reddish-brown
-reddish
-yellowish-white
-curl
-curls
-lean
-datum
-caffeine
-twelfth
-ft
-antlers
-cartilage
-rid
-deoxyribonucleic
-Canada
-Zealand
-slides
-webbed
-hydrogen
-foods
-raining
-fins
-curled
-loosely
-tables
-homosexual
-neuter
-John
-African
-urine
-Jewish
-Muslim
-universe
-reflexive
-Americans
-sung
-moderation
-acitivity
-socially
-sth
-Australian
-forcefully
-fashioned
-spacecraft
-lays
-bounds
-brightness
-linguistics
-magnet
-Japanese
-Chinese
-karate
-kung
-fu
-Christ
-minerals
-Britain
-metallic
-banknotes
-moon
-Islamic
-malaria
-MP3
-fungus
-American
-Swiss
-nt
-eleventh
-nucleus
-tenth
-wavelength
-wishing
-abused
-Judaism
-Christianity
-claws
-furry
-hundredth
-peppercorns
-positioned
-decimal
-compass
-populated
-France
-London
-Singapore
-clay
-UK
-uterus
-projected
-Prospective
-psychiatry
-shove
-triangular
-rains
-basing
-tape
-depends
-depend
-thorns
-oars
-rust
-sarcasm
-cheaply
-correspondence
-stupidly
-depending
-noisily
-sings
-slide
-equator
-vodka
-postage
-fim
-consciously
-colourless
-grammatically
-aimed
-multiplied
-silvery-coloured
-sporting
-trapped
-depended
-recieve
-organism
-narrower
-bringing
-paves
-heaviness
-yellowish
-Scotland
-barley
-conditional
-Hindu
-sweetened
+etc	abandon
+intentionally	abandoned
+chemically	acid
+sloping	angle
+negatives	any
+curved	arch
+sexually	attract
+theatrical	ballet
+participle	be
+pod	bean
+sting	bee
+two-wheeled	bicycle
+motorcycle	bike
+unpleasantly	bitter
+Africa	black
+chalk	blackboard
+currents	blow
+yeast	bread
+rounded	breast
+English	broken
+Spanish	broken
+Australia	bush
+patterned	butterfly
+uncontrolled	cancer
+wax	candle
+A&E	casualty
+compact	CD
+French	champagne
+British	chancellor
+axe	chop
+Christian	church
+European	classical
+Mozart	classical
+Stravinsky	classical
+hairy	coconut
+cement	concrete
+Asia	continent
+Europe	continent
+America	continent
+reddish-brown	copper
+reddish	copper
+yellowish-white	cream
+curl	curly
+curls	curly
+datum	data
+caffeine	decaffeinated
+twelfth	December
+ft	deep
+antlers	deer
+cartilage	disc
+deoxyribonucleic	DNA
+Canada	dollar
+Zealand	dollar
+webbed	duck
+hydrogen	element
+fins	fish
+curled	fist
+loosely	floppy
+homosexual	gay
+neuter	gender
+John	gerund
+African	giraffe
+urine	go
+Jewish	god
+Muslim	god
+reflexive	herself
+Americans	hip-hop
+acitivity	input
+socially	invite
+Australian	kangaroo
+forcefully	knock
+fashioned	lady
+spacecraft	launch
+bounds	leap
+brightness	light
+linguistics	linguistic
+magnet	magnetic
+Japanese	martial art
+Chinese	martial art
+karate	martial art
+kung	martial art
+fu	martial art
+Christ	millennium
+minerals	mine
+Britain	minister
+metallic	mirror
+banknotes	money
+Islamic	mosque
+malaria	mosquito
+fungus	mushroom
+American	nationality
+Swiss	nationality
+eleventh	November
+nucleus	nuclear
+tenth	October
+abused	open
+Judaism	orthodox
+Christianity	orthodox
+claws	paw
+furry	peach
+hundredth	pence
+peppercorns	pepper
+positioned	pile
+decimal	point
+compass	point
+France	post
+London	post
+Singapore	post
+clay	pottery
+UK	pound
+uterus	pregnant
+projected	projection
+psychiatry	psychiatrist
+shove	push
+triangular	pyramid
+tape	recording
+thorns	rose
+oars	row
+rust	rusty
+sarcasm	sarcastic
+cheaply	second
+correspondence	secretary
+stupidly	see
+noisily	sigh
+equator	south
+vodka	spirit
+postage	stamp
+consciously	subconsciously
+colourless	sweat
+grammatically	take
+multiplied	times
+silvery-coloured	tin
+sporting	train
+organism	virus
+paves	way
+heaviness	weigh
+yellowish	wheat
+Scotland	whisky
+barley	whisky
+conditional	will
+Hindu	yoga
+sweetened	yogurt

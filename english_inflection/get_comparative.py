@@ -23,7 +23,7 @@ def find_positive_irregular(word):
 
 # snug, snugger, snuggest
 def doubled_consonant(candidate):
-  if count_syllable(candidate) == 1 and len(candidate) > 2 and candidate[-1] == candidate[-2]:
+  if count_syllable(candidate) == 1 and len(candidate) > 3 and candidate[-1] == candidate[-2]:
     word = candidate[:-1]
     if word[-1] in consonants and word[-1] != 'x' and word[-1] != 'w' and word[-2] in vowels and word[-3] in consonants:
       return True
@@ -212,9 +212,9 @@ consonants = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'q', 'p', '
 poly_comps = ['eager', 'bitter', 'silver', 'tender', 'slender', 'sheer', 'sober', 'clever', 'proper']
 
 path = os.path.split(__file__)[0]
-read_comps(path + "/cefr_comparatives.tsv")
-read_comps(path + "/irregular_comparatives.txt")
-read_comps(path + "/uncomparables.txt")
+read_comps(os.path.join(path, "cefr_comparatives.tsv"))
+read_comps(os.path.join(path, "irregular_comparatives.txt"))
+read_comps(os.path.join(path, "uncomparables.txt"))
 
 if __name__ == "__main__":
   if len(sys.argv) < 2:

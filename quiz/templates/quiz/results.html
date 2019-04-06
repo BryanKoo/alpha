@@ -1,13 +1,27 @@
+<html>
 <font size=7>
 {% if stop_test == True %}
   <h1>끝났습니다.</h1>
   <h2>총 {{total}}문제 중 {{n_correct}}개 맞았습니다.</h2>
-  <h2>당신의 레벨은 {{level_text}}<br/><br/>
+  {% if sub_level > 0 and sub_level < 11 %}
+  <h2>당신의 레벨은 {{level_text}} 입니다.<br/><br/>
+  {% elif sub_level == 0 %}
+  <h2>레벨 통과 실패!<br/><br/>
+  {% else %}
+  <h2>레벨 통과 성공!<br/><br/>
+  {% endif %}
   <a href='{% url 'quiz:index' %}'>Restart</a>
   </h2>
 {% elif choice == a_index %}
   <h2>맞았습니다.</h2>
   <h2>총 {{total}}문제 중 {{n_correct}}개 맞았습니다.</h2>
+  <h2>Your choice was {{choice}}. <br/>
+  Correct answer was {{a_index}}. <br/><br/>
+  <a href='{% url 'quiz:detail' level %}'>Continue</a>
+  </h2>
+{% elif choice == 5 %}
+  <h1>감사합니다.</h1>
+  <h2>총 {{total}}문제 중 {{n_correct}}개 맞았습니다.</h2><br/>
   <h2>Your choice was {{choice}}. <br/>
   Correct answer was {{a_index}}. <br/><br/>
   <a href='{% url 'quiz:detail' level %}'>Continue</a>
@@ -26,5 +40,7 @@
 History is {{excepts}}. <br/>
 Score is {{scores}}. <br/>
 Level of the next question: {{level}}-{{sub_level}}. <br/>
+User ID is {{user_id}}
 </ul>
 </font>
+</html>

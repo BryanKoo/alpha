@@ -6,4 +6,5 @@ unfriendly	unfriendlier, unfriendliest
 in	inner, innest, innermost
 up	upper, uppest, uppermost
 old	older, oldest, elder, eldest
-known better-known, best-known
+known	better-known, best_known
+narrow	narrower, narrowest
