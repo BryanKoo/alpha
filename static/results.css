@@ -1,0 +1,39 @@
+a:link { color: darkblue; text-decoration: none;}
+a:visited { color: darkblue; text-decoration: none;}
+a:hover { color: darkblue; text-decoration: underline;}
+.buttons {
+  background-color: white;
+  border: 2px solid darkblue;
+  border-radius: 0.5em;
+  color: darkblue;
+  padding: 10px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 350%;
+  margin: 4px 2px;
+  width: 90%;
+  height: 2em;
+}
+.buttons:hover{color:white; background-color:darkblue;}
+.question {
+  font-size: 350%; margin: 5%;
+}
+.answers {
+  text-align: center;
+  margin: 0%;
+}
+.debug {
+  margin: 0%;
+  font-size: 200%;
+  color: white
+}
+.guide {
+  background-color: aquamarine; color: black; font-size: 350%;
+}
+.row {
+  display: flex; background-color: green; color: black;
+}
+.column {
+  flex: 50%; font-size: 200%;
+}
