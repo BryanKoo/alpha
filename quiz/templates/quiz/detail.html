@@ -27,11 +27,14 @@ a:hover { color: darkblue; text-decoration: underline;}
 .guide {
   background-color: aquamarine; color: black; font-size: 350%;
 }
-.row {
-  display: flex; background-color: lightgreen; color: black;
-}
 .column {
-  flex: 50%; font-size: 250%;
+  float: left; width: 50%;font-size: 250%;
+  background-color: lightgreen; color: black;
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
 }
 </style>
 </head>
