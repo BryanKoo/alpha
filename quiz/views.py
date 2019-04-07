@@ -12,10 +12,10 @@ cefr_text = ['초등학생', '중학교 1,2학년', '중학교 3학년', '고등
 # selecting level
 def index(request):
   context = None
-  seg = request.GET.get('seg', '0')
+  seg = request.GET.get('seg', '00')
   if 'seg' not in request.session:
     request.session['seg'] = int(seg)
-  elif request.session['seg'] == '0':
+  if seg != '00':
     request.session['seg'] = int(seg)
   if request.GET.get('reset', '0') == '1':
     request.session['level'] = 0
@@ -37,7 +37,6 @@ def index(request):
 
 # provide question/answer
 def detail(request, level):
-  seg = request.GET.get('seg', '0')
   if 'user_id' not in request.session:
     request.session['user_id'] = get_new_user_id()
   cefr_level = cefr_levels[int(level)-1]
