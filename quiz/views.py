@@ -83,7 +83,8 @@ def results(request, level, choice):
         else:
           stop_test = True
           request.session['sub_level'] += 1
-      else: stop_test = True
+      else:
+        stop_test = True
   else:
     result = "F"
     if choice != '5':
@@ -113,5 +114,5 @@ def results(request, level, choice):
     level_text = cefr_text[int(level)-1]
   else:
     level_text = cefr_text[int(level)-1] + ' ' + str(request.session['sub_level']*10) + '%'
-  context = {'word':request.session['word'], 'question':request.session['question'].replace("____", request.session['word']), 'seg':request.session['seg'], 'trial':request.session['trial'], 'level':level, 'choice':int(choice), 'a_index':a_index+1, 'total':total, 'n_correct': n_correct, 'sub_level':request.session['sub_level'], 'scores':request.session['scores'], 'excepts':request.session['excepts'], 'stop_test':stop_test, 'level_text':level_text, 'user_id':request.session['user_id']}
+  context = {'session_level':request.session['level'], 'word':request.session['word'], 'question':request.session['question'].replace("____", request.session['word']), 'seg':request.session['seg'], 'trial':request.session['trial'], 'level':level, 'choice':int(choice), 'a_index':a_index+1, 'total':total, 'n_correct': n_correct, 'sub_level':request.session['sub_level'], 'scores':request.session['scores'], 'excepts':request.session['excepts'], 'stop_test':stop_test, 'level_text':level_text, 'user_id':request.session['user_id']}
   return render(request, 'quiz/results.html', context)

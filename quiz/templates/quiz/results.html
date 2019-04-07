@@ -1,46 +1,6 @@
 <html>
 <head>
-<style type="text/css">
-a:link { color: darkblue; text-decoration: none;}
-a:visited { color: darkblue; text-decoration: none;}
-a:hover { color: darkblue; text-decoration: underline;}
-.buttons {
-  background-color: white;
-  border: 2px solid darkblue;
-  border-radius: 0.5em;
-  color: darkblue;
-  padding: 10px 10px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 350%;
-  margin: 4px 2px;
-  width: 90%;
-  height: 2em;
-}
-.buttons:focus{color:white; background-color:darkblue;}
-.question {
-  font-size: 350%; margin: 5%;
-}
-.answers {
-  text-align: center;
-  margin: 0%;
-}
-.debug {
-  margin: 0%;
-  font-size: 200%;
-  color: white
-}
-.guide {
-  background-color: aquamarine; color: black; font-size: 350%;
-}
-.row {
-  display: flex; background-color: green; color: black;
-}
-.column {
-  flex: 50%; font-size: 200%;
-}
-</style>
+<link rel="stylesheet" href="/static/alpha.css">
 </head>
 <body>
 {% if stop_test == True %}
@@ -60,6 +20,7 @@ a:hover { color: darkblue; text-decoration: underline;}
   {{word}}<br/><br/>
   {{question}}
   </div>
+  <br/>
   <div class='answers'>
   <button class='buttons' onclick="window.location.href='{% url 'quiz:index' %}'">처음으로</button><br/><br/>
   </div>
@@ -72,6 +33,7 @@ a:hover { color: darkblue; text-decoration: underline;}
   {{word}}<br/><br/>
   {{question}}
   </div>
+  <br/>
   <div class='answers'>
   <button class='buttons' onclick="window.location.href='{% url 'quiz:detail' level %}'">계속풀기</button><br/><br/>
   </div>
@@ -84,6 +46,7 @@ a:hover { color: darkblue; text-decoration: underline;}
   {{word}}<br/><br/>
   {{question}}
   </div>
+  <br/>
   <div class='answers'>
   <button class='buttons' onclick="window.location.href='{% url 'quiz:detail' level %}'">계속풀기</button><br/><br/>
   </div>
@@ -96,6 +59,7 @@ a:hover { color: darkblue; text-decoration: underline;}
   {{word}}<br/><br/>
   {{question}}
   </div>
+  <br/>
   <div class='answers'>
   <button class='buttons' onclick="window.location.href='{% url 'quiz:detail' level %}'">계속풀기</button><br/><br/>
   </div>
@@ -107,6 +71,7 @@ User ID is {{user_id}} <br/>
 Seg is {{seg}} <br/>
 Trial is {{trial}} <br/>
 Leveltext is {{level_text}} <br/>
+Session level is {{session_level}} <br/>
 <div>
 </body>
 </html>
