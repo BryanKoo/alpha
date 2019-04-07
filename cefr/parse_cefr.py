@@ -169,7 +169,7 @@ def select_2examples(word, examples_org):
   for example in examples_org:
     if is_sentence(example):
       example = cleanse_example(word, example)
-      if len(example.split(' ')) < 5:
+      if len(example.split(' ')) < 8:
         too_short = True
         candidates.append(example)
       elif len(example.split(' ')) > 16:
@@ -182,13 +182,12 @@ def select_2examples(word, examples_org):
     if too_long:
       shortest = ""
       for example in candidates:
-        if len(example.split(' ')) < 6: continue
         if shortest == "" or len(example.split(' ')) < len(shortest.split(' ')):
           shortest = example
       examples.append(shortest)
     elif too_short:
-      print "example too short", word, examples_org
-      pdb.set_trace()
+      #print "example too short", word, examples_org
+      #pdb.set_trace()
       longest = ""
       for example in candidates:
         if longest == "" or len(example.split(' ')) > len(longest.split(' ')):

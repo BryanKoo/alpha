@@ -1,48 +1,109 @@
 <html>
-<font size=7>
+<head>
+<style type="text/css">
+a:link { color: blue; text-decoration: none;}
+a:visited { color: blue; text-decoration: none;}
+a:hover { color: blue; text-decoration: underline;}
+.buttons {
+  background-color: white;
+  border: 2px solid blue;
+  border-radius: 0.5em;
+  color: blue;
+  padding: 10px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 300%;
+  margin: 4px 2px;
+  width: 20em;
+  height: 2em;
+}
+.question {
+  font-size: 300%; margin: 5%;
+}
+.answers {
+  margin: 10%;
+}
+.debug {
+  margin: 0%;
+  font-size: 100%;
+}
+.guide {
+  background-color: aquamarine; color: black; font-size: 300%;
+}
+.row {
+  display: flex; background-color: green; color: black;
+}
+.column {
+  flex: 50%; font-size: 200%;
+}
+</style>
+</head>
+<body>
 {% if stop_test == True %}
-  <h1>끝났습니다.</h1>
-  <h2>총 {{total}}문제 중 {{n_correct}}개 맞았습니다.</h2>
+  <div class='guide'>
+  테스트가 완료되었습니다.<br/>
+  총 {{total}}문제 중 {{n_correct}}개 맞았습니다.<br/>
   {% if sub_level > 0 and sub_level < 11 %}
-  <h2>당신의 레벨은 {{level_text}} 입니다.<br/><br/>
+  당신의 레벨은 {{level_text}} 입니다.<br/>
   {% elif sub_level == 0 %}
-  <h2>레벨 통과 실패!<br/><br/>
+  {{level_text}} 레벨 통과 실패!<br/>
   {% else %}
-  <h2>레벨 통과 성공!<br/><br/>
+  {{level_text}} 레벨 통과 성공!<br/>
   {% endif %}
-  <a href='{% url 'quiz:index' %}'>Restart</a>
-  </h2>
+  다른 레벨도 테스트해보세요~
+  </div>
+  <div class='question'>
+  {{word}}<br/>
+  {{question}}
+  </div>
+  <div class='answers'>
+  <button class='buttons' onclick="window.location.href='{% url 'quiz:index' %}'">처음으로</button><br/><br/>
+  </div>
 {% elif choice == a_index %}
-  <h2>맞았습니다.</h2>
-  <h2>총 {{total}}문제 중 {{n_correct}}개 맞았습니다.</h2>
-  <h2>Your choice was {{choice}}. <br/>
-  Correct answer was {{a_index}}. <br/><br/>
-  <a href='{% url 'quiz:detail' level %}'>Continue</a>
-  </h2>
+  <div class='guide'>
+  맞았습니다.<br/>
+  총 {{total}}문제 중 {{n_correct}}개 맞았습니다.
+  </div>
+  <div class='question'>
+  {{word}}<br/>
+  {{question}}
+  </div>
+  <div class='answers'>
+  <button class='buttons' onclick="window.location.href='{% url 'quiz:detail' level %}'">계속풀기</button><br/><br/>
+  </div>
 {% elif choice == 5 %}
-  <h1>감사합니다.</h1>
-  <h2>총 {{total}}문제 중 {{n_correct}}개 맞았습니다.</h2><br/>
-  <h2>Your choice was {{choice}}. <br/>
-  Correct answer was {{a_index}}. <br/><br/>
-  <a href='{% url 'quiz:detail' level %}'>Continue</a>
-  </h2>
+  <div class='guide'>
+  감사합니다.<br/>
+  문제를 점검하겠습니다.
+  </div>
+  <div class='question'>
+  {{word}}<br/>
+  {{question}}
+  </div>
+  <div class='answers'>
+  <button class='buttons' onclick="window.location.href='{% url 'quiz:detail' level %}'">계속풀기</button><br/><br/>
+  </div>
 {% else %}
-  <h1>틀렸습니다.</h1>
-  <h2>총 {{total}}문제 중 {{n_correct}}개 맞았습니다.</h2><br/>
-  <h2>Your choice was {{choice}}. <br/>
-  Correct answer was {{a_index}}. <br/><br/>
-  <a href='{% url 'quiz:detail' level %}'>Continue</a>
-  </h2>
+  <div class='guide'>
+  틀렸습니다.<br/>
+  총 {{total}}문제 중 {{n_correct}}개 맞았습니다.
+  </div>
+  <div class='question'>
+  {{word}}<br/>
+  {{question}}
+  </div>
+  <div class='answers'>
+  <button class='buttons' onclick="window.location.href='{% url 'quiz:detail' level %}'">계속풀기</button><br/><br/>
+  </div>
 {% endif %}
-</font>
-<font size=5>
-<ul>
+<div class='debug'>
 History is {{excepts}} <br/>
 Score is {{scores}} <br/>
 Level of the next question: {{level}}-{{sub_level}} <br/>
 User ID is {{user_id}} <br/>
 Seg is {{seg}} <br/>
 Trial is {{trial}} <br/>
-</ul>
-</font>
+<div>
+</body>
 </html>

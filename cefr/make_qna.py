@@ -276,12 +276,18 @@ def select_2wrong(conn, columns):
 # output = [(word, pos, meaning, examples)]
 def select_2wrong_q2(conn, columns):
   word = columns[2]
+  level = columns[0]
+  pos = columns[1]
   if len(word) < 2:
     word_postfix = word[-1]
   else:
     word_postfix = word[-2:]
-  sql = "select distinct(word) from words_bymeaning where " + \
-    "level = ? and word like '%" + word_postfix + "' and pos like ? and word != ? order by random() limit 2;"
+  if level in ['A1', 'A2'] and pos.startswith("AD"):
+    sql = "select distinct(word) from words_bymeaning where " + \
+      "level = ? and word like '%" + word_postfix + "' and pos not like ? and word != ? order by random() limit 2;"
+  else:
+    sql = "select distinct(word) from words_bymeaning where " + \
+      "level = ? and word like '%" + word_postfix + "' and pos like ? and word != ? order by random() limit 2;"
 
   try:
     cur = conn.cursor()
@@ -291,8 +297,12 @@ def select_2wrong_q2(conn, columns):
     print(e)
 
   if len(rows) < 2:
-    sql = "select distinct(word) from words_bymeaning where " + \
-      "level = ? and pos like ? and word != ? order by random() limit 2;"
+    if level in ['A1', 'A2'] and pos.startswith("AD"):
+      sql = "select distinct(word) from words_bymeaning where " + \
+        "level = ? and pos not like ? and word != ? order by random() limit 2;"
+    else:
+      sql = "select distinct(word) from words_bymeaning where " + \
+        "level = ? and pos like ? and word != ? order by random() limit 2;"
     try:
       cur = conn.cursor()
       cur.execute(sql, columns)
@@ -307,9 +317,12 @@ def select_2wrong_q4(conn, columns):
   pos = columns[1]
   word = columns[2]
   word_postfix = word[-1]
-  if pos.startswith("NUMBER") or pos.startswith("EXCL") or \
+  if pos.startswith("NUMBER") or pos.startswith("EXCL") or level in ['A1', 'A2'] or \
     (level in ['A1', 'A2', 'B1', 'B2'] and (pos.startswith("AD") or pos.startswith("NOUN"))):
-    sql = "select distinct(word) from words_bymeaning where " + \
+    #sql = "select distinct(word) from words_bymeaning where " + \
+    #  "level = ? and pos not like ? and pos not like 'PHRASE%' and word like '%" + word_postfix + "' and word != ? " + \
+    #  "order by random() limit 2;"
+    sql = "select word from words_bymeaning group by word having " + \
       "level = ? and pos not like ? and pos not like 'PHRASE%' and word like '%" + word_postfix + "' and word != ? " + \
       "order by random() limit 2;"
   else:
@@ -411,23 +424,23 @@ def blank_word_example(word, pos, example):
         break
   if found == "": pdb.set_trace()
   if example.count(' ' + found + ' ') >= 1:
-    return example.replace(' ' + found + ' ', " [ ___ ] "), found
+    return example.replace(' ' + found + ' ', " ____ "), found
   elif example.count(' ' + found) >= 1:
-    return example.replace(' ' + found, " [ ___ ]"), found
+    return example.replace(' ' + found, " ____ "), found
   elif example.count(found + ' ') >= 1:
-    return example.replace(found + ' ', "[ ___ ] "), found
+    return example.replace(found + ' ', " ____ "), found
   elif example.count(found + ',') >= 1:
-    return example.replace(found + ',', "[ ___ ],"), found
+    return example.replace(found + ',', " ____,"), found
   elif example.count(found + '!') >= 1:
-    return example.replace(found + '!', "[ ___ ]!"), found
+    return example.replace(found + '!', " ____!"), found
   elif example.count(found + '?') >= 1:
-    return example.replace(found + '?', "[ ___ ]?"), found
+    return example.replace(found + '?', " ____?"), found
   elif example.count(found + '.') >= 1:
-    return example.replace(found + '.', "[ ___ ]."), found
+    return example.replace(found + '.', " ____."), found
   elif example.count(found + "'") >= 1:
-    return example.replace(found + '.', "[ ___ ]'"), found
+    return example.replace(found + "'", " ____'"), found
   elif example.count(found + '"') >= 1:
-    return example.replace(found + '.', '[ ___ ]"'), found
+    return example.replace(found + '"', ' ____"'), found
   else:
     print "not found replaceable from", found, example
     pdb.set_trace()
@@ -709,7 +722,7 @@ def make_qna_type2or4(level, sub_level, excepts=None):
     make_log(word + '||' + pos + '||' + example + '||' + removed)
     for wrong in wrongs:
       conjugated = ""
-      if pos.startswith("VERB") or pos.startswith("AUX") or pos.startswith("MODAL"):
+      if level not in ['A1', 'A2'] and (pos.startswith("VERB") or pos.startswith("AUX") or pos.startswith("MODAL")):
         conjugated = conjugate(wrong[0], pos, tag)
       if removed[0].isupper() and (not word[0].isupper() or example_org.find(removed) == 0):
         if conjugated == "":

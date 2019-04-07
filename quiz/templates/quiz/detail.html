@@ -5,35 +5,56 @@ a:link { color: blue; text-decoration: none;}
 a:visited { color: blue; text-decoration: none;}
 a:hover { color: blue; text-decoration: underline;}
 .buttons {
-    background-color: blue;
-    border: 1px;
-    border-radius: 0.5em;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 1em;
-    margin: 4px 2px;
-    cursor: pointer;
-    width: 20em;
-    height: 2em;
+  background-color: white;
+  border: 2px solid blue;
+  border-radius: 0.5em;
+  color: blue;
+  padding: 10px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 300%;
+  margin: 4px 2px;
+  width: 20em;
+  height: 2em;
+}
+.question {
+  font-size: 300%; margin: 5%;
+}
+.answers {
+  margin: 10%;
+}
+.guide {
+  background-color: aquamarine; color: black; font-size: 300%;
+}
+.row {
+  display: flex; background-color: green; color: black;
+}
+.column {
+  flex: 50%; font-size: 200%;
 }
 </style>
 </head>
 <body>
-<font size=7>
+<div class='row'>
+<div class='column'>{{level_text}}</div><div class='column' style='text-align:right'>O:{{num_t}} X:{{num_f}}</div>
+</div>
+<div class='guide'>
 {% if qtype == 2 %}
-     <h3>주어진 단어/문구의 뜻을 가진 단어를 선택하세요.</h3>
+     주어진 단어/문구의 뜻을 가진 단어를 선택하세요.
 {% else %}
-     <h3>대괄호 안에 들어갈 가장 적합한 단어를 선택하세요.</h3>
+     밑줄에 들어갈 가장 적합한 단어를 선택하세요.
 {% endif %}
-<h3>{{question}}</h3>
+</div>
+<div class='question'>
+{{question}}
+</div>
+<div class = 'answers'>
 <button class='buttons' onclick="window.location.href='{% url 'quiz:results' level 1 %}'">{{answer1}}</button><br/><br/>
 <button class='buttons' onclick="window.location.href='{% url 'quiz:results' level 2 %}'">{{answer2}}</button><br/><br/>
 <button class='buttons' onclick="window.location.href='{% url 'quiz:results' level 3 %}'">{{answer3}}</button><br/><br/>
 <button class='buttons' onclick="window.location.href='{% url 'quiz:results' level 4 %}'">모르겠어요</button><br/><br/>
 <button class='buttons' onclick="window.location.href='{% url 'quiz:results' level 5 %}'">문제나 답안이 이상해요</button><br/><br/>
-</font>
+</div>
 </body>
 </html>
