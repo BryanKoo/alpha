@@ -42,6 +42,8 @@ def detail(request, level):
     request.session['user_id'] = get_new_user_id()
   cefr_level = cefr_levels[int(level)-1]
   level_text = cefr_text[int(level)-1]
+  if request.session['sub_level'] > 10: request.session['sub_level'] = 10
+  if request.session['sub_level'] < 1: request.session['sub_level'] = 1
   qnas = make_qna_type2or4(cefr_level, request.session['sub_level'], request.session['excepts'])  # quiz type2 or 4
   if len(qnas) < 1:
     qnas = [['word'], ['pos'], ['meaning'], ['question4'], [''], ['answer1', 'answer2', 'answer3']]
