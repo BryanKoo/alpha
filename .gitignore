@@ -2,5 +2,5 @@
 *.bak
 *.log
 .*
-db.*
-#test.db
+#db.*
+test.db
