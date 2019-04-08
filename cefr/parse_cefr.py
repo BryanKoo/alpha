@@ -169,7 +169,7 @@ def select_2examples(word, examples_org):
   for example in examples_org:
     if is_sentence(example):
       example = cleanse_example(word, example)
-      if len(example.split(' ')) < 8:
+      if len(example.split(' ')) < 6:
         too_short = True
         candidates.append(example)
       elif len(example.split(' ')) > 16:
@@ -186,7 +186,7 @@ def select_2examples(word, examples_org):
           shortest = example
       examples.append(shortest)
     elif too_short:
-      #print "example too short", word, examples_org
+      print "example too short", word, examples_org
       #pdb.set_trace()
       longest = ""
       for example in candidates:
@@ -1132,6 +1132,16 @@ if __name__ == "__main__":
   cefr_word_pos_meaning = []
 
   if write_db:
+    dbfile = "test.db"
+    if os.path.exists(dbfile):
+      os.remove(dbfile)
+    conn = create_connection(dbfile)
+    if conn is not None:
+      create_tables_from_file(conn, "create_test.sql")
+    else:
+      pdb.set_trace()
+    conn.close()
+
     dbfile = "cefr.db"
     if os.path.exists(dbfile):
       os.remove(dbfile)
@@ -1140,6 +1150,7 @@ if __name__ == "__main__":
       create_tables_from_file(conn, "create.sql")
     else:
       pdb.set_trace()
+
     parse_vocabulary(conn, dicfile)
     conn.close()
   elif write_pickle:

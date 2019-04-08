@@ -648,7 +648,7 @@ def make_qna(qtype, level, sub_level, count):
 
 def get_new_user_id():
   path = os.path.split(__file__)[0]
-  dbfile = os.path.join(path, "cefr.db")
+  dbfile = os.path.join(path, "test.db")
   conn = create_connection(dbfile)
   sql = "select user_id from test_qnas order by user_id desc limit 1;"
   try:
@@ -657,6 +657,7 @@ def get_new_user_id():
     rows = cur.fetchall()
   except sqlite3.Error as e:
     print(e)
+  conn.close()
   if not rows:
     return 1
   else:
@@ -664,7 +665,7 @@ def get_new_user_id():
 
 def insert_qna_result(columns):
   path = os.path.split(__file__)[0]
-  dbfile = os.path.join(path, "cefr.db")
+  dbfile = os.path.join(path, "test.db")
   conn = create_connection(dbfile)
   sql = "insert into test_qnas (user_id, seg, trial, time_text, level, sub_level, word, question, answers, result) values (?,?,?,?,?,?,?,?,?,?);"
   try:
@@ -673,6 +674,7 @@ def insert_qna_result(columns):
     conn.commit()
   except sqlite3.Error as e:
     print(e)
+  conn.close()
   return cur.lastrowid
 
 
