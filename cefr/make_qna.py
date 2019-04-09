@@ -137,7 +137,8 @@ def remove_front_paren(meaning):
     meaning = re.sub(r'\(.*\)', '', meaning)
   return meaning.strip()
 
-# why the second pos?
+# return second pos if the first is PHRASE
+# add % for like operation
 def get_1pos(pos):
   tokens = pos.split(";")
   if len(tokens) == 1:
@@ -154,7 +155,6 @@ def create_connection(db_file):
     return conn
   except sqlite3.Error as e:
     print(e)
-    pdb.set_trace()
   return None
 
 # select level, count(*) from words_bymeaning group by level;
@@ -255,10 +255,29 @@ def select_1answer_q3(conn, columns):
 
   return rows
 
+def rare_pos(pos):
+  if pos.startswith("PRON") or pos.startswith("DET") or pos.startswith("ORD") or pos.startswith("AUX") or \
+    pos.startswith("MOD") or pos.startswith("CONJ") or pos.startswith("NUM") or pos.startswith("EXCL") or pos.startswith("PREP"):
+    return True
+  else:
+    return False
+
 # input columns = [level, pos, word]
 def select_2wrong(conn, columns):
-  sql = "select word, pos, meaning, example1, example2 from words_bymeaning where " + \
-    "level = ? and pos like ? and word != ? order by random() limit 2;"
+  if columns[1].count('INF') > 0:
+    columns[1] = 'PREP%'
+  level = columns[0]
+  pos = columns[1]
+  word = columns[2]
+
+  if rare_pos(pos):
+    columns = [pos, word]
+    sql = "select word, pos, meaning, example1, example2 from words_bymeaning where " + \
+      "pos like ? and word != ? order by random() limit 2;"
+  else:
+    sql = "select word, pos, meaning, example1, example2 from words_bymeaning where " + \
+      "level = ? and pos like ? and word != ? order by random() limit 2;"
+
   try:
     cur = conn.cursor()
     cur.execute(sql, columns)
@@ -268,26 +287,33 @@ def select_2wrong(conn, columns):
 
   if len(rows) < 2:
     print "cannot find 2 wrong answers", word
-    pdb.set_trace()
 
   return rows
 
 # input columns = [level, pos, word]
 # output = [(word, pos, meaning, examples)]
 def select_2wrong_q2(conn, columns):
-  word = columns[2]
+  if columns[1].count('INF') > 0:
+    columns[1] = 'PREP%'
   level = columns[0]
   pos = columns[1]
+  word = columns[2]
   if len(word) < 2:
     word_postfix = word[-1]
   else:
     word_postfix = word[-2:]
+
   if level in ['A1', 'A2'] and pos.startswith("AD"):
     sql = "select distinct(word) from words_bymeaning where " + \
       "level = ? and word like '%" + word_postfix + "' and pos not like ? and word != ? order by random() limit 2;"
   else:
-    sql = "select distinct(word) from words_bymeaning where " + \
-      "level = ? and word like '%" + word_postfix + "' and pos like ? and word != ? order by random() limit 2;"
+    if rare_pos(pos):
+      columns = [pos, word]
+      sql = "select distinct(word) from words_bymeaning where " + \
+        "word like '%" + word_postfix + "' and pos like ? and word != ? order by random() limit 2;"
+    else:
+      sql = "select distinct(word) from words_bymeaning where " + \
+        "level = ? and word like '%" + word_postfix + "' and pos like ? and word != ? order by random() limit 2;"
 
   try:
     cur = conn.cursor()
@@ -301,8 +327,13 @@ def select_2wrong_q2(conn, columns):
       sql = "select distinct(word) from words_bymeaning where " + \
         "level = ? and pos not like ? and word != ? order by random() limit 2;"
     else:
-      sql = "select distinct(word) from words_bymeaning where " + \
-        "level = ? and pos like ? and word != ? order by random() limit 2;"
+      if rare_pos(pos):
+        columns = [pos, word]
+        sql = "select distinct(word) from words_bymeaning where " + \
+          "pos like ? and word != ? order by random() limit 2;"
+      else:
+        sql = "select distinct(word) from words_bymeaning where " + \
+          "level = ? and pos like ? and word != ? order by random() limit 2;"
     try:
       cur = conn.cursor()
       cur.execute(sql, columns)
@@ -313,10 +344,13 @@ def select_2wrong_q2(conn, columns):
 
 # input columns = [level, pos, word]
 def select_2wrong_q4(conn, columns):
+  if columns[1].count('INF') > 0:
+    columns[1] = 'PREP%'
   level = columns[0]
   pos = columns[1]
   word = columns[2]
   word_postfix = word[-1]
+
   if pos.startswith("NUMBER") or pos.startswith("EXCL") or level in ['A1', 'A2'] or \
     (level in ['A1', 'A2', 'B1', 'B2'] and (pos.startswith("AD") or pos.startswith("NOUN"))):
     #sql = "select distinct(word) from words_bymeaning where " + \
@@ -326,8 +360,13 @@ def select_2wrong_q4(conn, columns):
       "level = ? and pos not like ? and pos not like 'PHRASE%' and word like '%" + word_postfix + "' and word != ? " + \
       "order by random() limit 2;"
   else:
-    sql = "select distinct(word) from words_bymeaning where " + \
-      "level = ? and pos like ? and word != ? order by random() limit 2;"
+    if rare_pos(pos):
+      columns = [pos, word]
+      sql = "select distinct(word) from words_bymeaning where " + \
+        "pos like ? and word != ? order by random() limit 2;"
+    else:
+      sql = "select distinct(word) from words_bymeaning where " + \
+        "level = ? and pos like ? and word != ? order by random() limit 2;"
   try:
     cur = conn.cursor()
     cur.execute(sql, columns)
@@ -337,12 +376,18 @@ def select_2wrong_q4(conn, columns):
 
   if len(rows) < 2:
     make_log("few result of wrong answers for " + word)
-    if pos.startswith("NUMBER") or (level in ['A1', 'A2', 'B1', 'B2'] and (pos.startswith("AD") or pos.startswith("NOUN"))):
+    if pos.startswith("NUMBER") or pos.startswith("EXCL") or level in ['A1', 'A2'] or \
+      (level in ['A1', 'A2', 'B1', 'B2'] and (pos.startswith("AD") or pos.startswith("NOUN"))):
       sql = "select distinct(word) from words_bymeaning where " + \
         "level = ? and pos not like ? and pos not like 'PHRASE%' and word != ? order by random() limit 2;"
     else:
-      sql = "select distinct(word) from words_bymeaning where " + \
-        "level = ? and pos like ? and word != ? order by random() limit 2;"
+      if rare_pos(pos):
+        columns = [pos, word]
+        sql = "select distinct(word) from words_bymeaning where " + \
+          "pos like ? and word != ? order by random() limit 2;"
+      else:
+        sql = "select distinct(word) from words_bymeaning where " + \
+          "level = ? and pos like ? and word != ? order by random() limit 2;"
     try:
       cur = conn.cursor()
       cur.execute(sql, columns)
@@ -712,7 +757,7 @@ def make_qna_type2or4(level, sub_level, excepts=None):
   elif bad_meaning(word, pos, meaning):
     qtype = 4
 
-  if qtype == 2 and random.randrange(1,3) == 1:
+  if random.randrange(1,3) == 1:
     qtype = 4
 
   if qtype == 4:
