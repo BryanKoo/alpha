@@ -160,7 +160,7 @@ def cleanse_example(word, example):
 # select sentence instead of phrase
 # example should be not too short and not too long (6 ~ 16 words)
 def select_2examples(word, examples_org):
-  #if word == "what": pdb.set_trace()
+  #if word == "vomit": pdb.set_trace()
   too_short = False
   too_long = False
   candidates = []
@@ -182,7 +182,7 @@ def select_2examples(word, examples_org):
     if too_long:
       shortest = ""
       for example in candidates:
-        if shortest == "" or len(example.split(' ')) < len(shortest.split(' ')):
+        if len(example.split(' ')) >= 6 and (shortest == "" or len(example.split(' ')) < len(shortest.split(' '))):
           shortest = example
       examples.append(shortest)
     elif too_short:
