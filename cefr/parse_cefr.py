@@ -187,7 +187,7 @@ def select_2examples(word, examples_org):
       examples.append(shortest)
     elif too_short:
       print "example too short", word, examples_org
-      #pdb.set_trace()
+      pdb.set_trace()
       longest = ""
       for example in candidates:
         if longest == "" or len(example.split(' ')) > len(longest.split(' ')):
@@ -1132,6 +1132,7 @@ if __name__ == "__main__":
   cefr_word_pos_meaning = []
 
   if write_db:
+    '''
     dbfile = "test.db"
     if os.path.exists(dbfile):
       os.remove(dbfile)
@@ -1141,7 +1142,7 @@ if __name__ == "__main__":
     else:
       pdb.set_trace()
     conn.close()
-
+    '''
     dbfile = "cefr.db"
     if os.path.exists(dbfile):
       os.remove(dbfile)
